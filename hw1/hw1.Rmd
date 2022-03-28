@@ -1,0 +1,18 @@
+---
+title: "hw1"
+author: "Anna Shchetsova"
+output:
+  pdf_document: default
+  hw1: default
+---
+
+```{r}
+a <- pi / 2
+b <- -pi / 2
+N = 1000
+rand_point <- runif(N, b, a)
+down <- (a - b) / 2 * sum(2 * abs(rand_point) - pi)
+up <- (a - b) / 2 * sum(sin(2 * rand_point))
+res <- up - down
+res
+```

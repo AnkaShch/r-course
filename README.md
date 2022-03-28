@@ -1,2 +1,2 @@
 # r-course
-My homework for university r-course by Anton Zamyatin
+My homework for university R course by Anton Zamyatin

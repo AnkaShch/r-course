@@ -9,10 +9,10 @@ output:
 ```{r}
 a <- pi / 2
 b <- -pi / 2
-N = 1000
+N = 10000
 rand_point <- runif(N, b, a)
-down <- (a - b) / 2 * sum(2 * abs(rand_point) - pi)
-up <- (a - b) / 2 * sum(sin(2 * rand_point))
+down <- (a - b) / N * sum(2 * abs(rand_point) - pi)
+up <- (a - b) / N * sum(abs(sin(2 * rand_point)))
 res <- up - down
 res
 ```

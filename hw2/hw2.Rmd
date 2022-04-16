@@ -1,0 +1,134 @@
+---
+title: "hw2"
+author: "Anna Shchetsova"
+output:
+  pdf_document
+  
+knit: (function(input, encoding) {
+    rmarkdown::render(
+      input = input,
+      encoding = encoding,
+      envir = globalenv()
+    )
+  })
+---
+
+```{r}
+deck <- read.csv("./deck.csv")
+
+dealer <- data.frame()
+me <- data.frame()
+```
+
+```{r}
+shuffle_deck <- function() {
+  deck <<- deck[sample(1:nrow(deck)),]
+}
+```
+
+```{r}
+give_card_dealer <- function() {
+  dealer <<- rbind(dealer, deck[1, ])
+  deck <<- deck[2:nrow(deck), ]
+}
+
+give_card_me <- function() {
+  me <<- rbind(me, deck[1, ])
+  deck <<- deck[2:nrow(deck), ]
+}
+```
+
+```{r}
+calc_chances <- function() {
+  sum_dealer <- sum(dealer["value"])
+  sum_me <- sum(me["value"])
+  if (sum_me > 21) {
+    return(0)
+  } else if (sum_me >= sum_dealer) {
+    return(100)
+  } else {
+    possible_sum <- deck["value"] + sum_me
+    return(mean(possible_sum <= 21 & possible_sum >= sum_dealer) * 100)
+  }
+}
+```
+
+```{r}
+print_state <- function() {
+  cat("Dealer\'s hand:", "\n")
+  for (i in 1:nrow(dealer)) {
+    cat(dealer[i, "face"], " ")
+    cat(dealer[i, "suit"], " ")
+    cat(dealer[i, "value"], "\n")
+  }
+  cat(paste("sum", sum(dealer["value"])), "\n\n")
+  
+  cat("My hand:", "\n")
+  for (i in 1:nrow(me)) {
+    cat(me[i, "face"], " ")
+    cat(me[i, "suit"], " ")
+    cat(me[i, "value"], "\n")
+  }
+  cat(paste("sum", sum(me["value"])), "\n\n")
+  
+  chance <- calc_chances()
+  cat("chances", " ")
+  cat(paste(chance, "%", sep=""), "\n\n")
+}
+```
+
+```{r}
+start_game <- function() {
+  shuffle_deck()
+  dealer <<- data.frame()
+  me <<- data.frame()
+  
+  give_card_dealer()
+  give_card_me()
+  give_card_dealer()
+  give_card_me()
+  
+  print_state()
+} 
+```
+
+```{r}
+deal <- function() {
+  give_card_me()
+  print_state()
+}
+```
+
+```{r}
+stop_game <- function(chance) {
+  if (chance == 0) {
+    cat("LOOSE!")
+  } else if (chance == 100) {
+    cat("WIN!")
+  } else (
+    cat("error: game not over")
+  )
+  cat("\n")
+}
+```
+
+```{r}
+game <- function(N) {
+  cat(paste("GAME", N), "\n\n")
+  start_game()
+  chance <- calc_chances()
+  while (chance > 0 & chance < 100) {
+    deal()
+    chance <- calc_chances()
+  }
+  stop_game(chance)
+}
+```
+
+```{r}
+game(1)
+```
+
+```{r}
+game(2)
+```
